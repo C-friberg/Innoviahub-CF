@@ -1,0 +1,236 @@
+.bookingsWrapper {
+    width: 100%;
+    max-width: 1100px;
+    padding: 24px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 0 0 6px 6px;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading {
+    flex-direction: column;
+}
+
+.headerAndButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.eyebrow {
+    margin: 0 0 6px;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+}
+
+.heading h2 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 22px;
+}
+
+.placeholder {
+    min-height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+}
+
+.placeholder p {
+    margin: 0;
+
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+button {
+    margin: 0 0 6px;
+    background-color: transparent;
+    color: var(--primary);
+    border: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+button:hover {
+    color:  var(--primary-hover);
+}
+
+button:active {
+    color: var(--primary);
+}
+
+.info {
+    width: 100%;
+    margin-bottom: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    font-weight: 100;
+    font-size: 15px;
+
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.bookingRow {
+    position: relative;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 1rem 0;
+
+    color: var(--text);
+    font-size: 14px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.resourceId {
+    width: 10%;
+}
+
+.resource {
+    width: 20%;
+}
+
+.user {
+    width: 30%;
+}
+
+.date {
+    width: 20%;
+}
+
+.time {
+    width: 20%;
+}
+
+.deleteButton {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    margin: 0;
+    padding: 6px 10px;
+
+    background-color: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+
+    color: var(--text-secondary);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.deleteButton:hover {
+    color: var(--text);
+    border-color: var(--text-secondary);
+}
+
+.deleteButton:active {
+    transform: translateY(-50%) scale(0.97);
+}
+
+.headerAndButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.buttonGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 1000px) {
+  .buttonGroup button {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    padding: 3px 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .bookingsWrapper {
+    padding: 16px;
+  }
+
+  .info {
+    display: none;
+  }
+  .headerAndButton {
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .bookingRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    padding: 10px 0 10px;
+  }
+
+  .resource,
+  .user,
+  .date,
+  .time {
+    width: 100%;
+  }
+
+  .deleteButton {
+    top: auto;
+    bottom: 10px;
+    right: 0;
+
+    transform: none;
+  }
+
+  .deleteButton:active {
+    transform: scale(0.97);
+  }
+
+  .headerAndButton button {
+    font-size: 11px;
+    padding: 3px 5px;
+    letter-spacing: 1.3px;
+  }
+
+  .buttonGroup {
+    gap: 3px;
+  }
+
+  .buttonGroup button {
+    font-size: 10px;
+    letter-spacing: 0.2px;
+    padding: 2px 3px;
+    white-space: nowrap;
+    margin: 0;
+  }
+}

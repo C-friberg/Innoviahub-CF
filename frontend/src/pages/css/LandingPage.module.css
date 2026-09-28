@@ -1,0 +1,237 @@
+.landingPage {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 80px 20px 20px;
+  background:
+    radial-gradient(circle at top, rgba(0, 153, 255, 0.12), transparent 35%),
+    var(--background);
+}
+
+.welcome {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+
+  color: var(--primary);
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.welcome h1 {
+  margin: 0 0 12px;
+
+  color: var(--text);
+
+  font-size: 32px;
+}
+
+.description {
+  margin: 0;
+
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.adminButton {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  margin-top: 20px;
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.adminButton:hover {
+  color: var(--text);
+  border-color: var(--primary);
+  background-color: rgba(21, 151, 255, 0.05);
+}
+
+.adminButton:active {
+  color: var(--text);
+  background-color: rgba(19, 133, 226, 0.05);
+}
+
+.bookingCalendarWrapper {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.resourcesLandingWrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.resourcesLandingWrapper > * {
+  flex: 1;
+  min-width: 0;
+}
+.bookingAction {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.bookingAction p {
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.bookingAction button {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+.bookingAction button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.successMessage,
+.errorMessage {
+  margin-top: 15px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.successMessage {
+  color: var(--text);
+}
+
+.errorMessage {
+  color: var(--text);
+}
+
+.timeSlotsView {
+  width: 100%;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+
+  margin: 20px 0 0 0;
+  padding: 8px 12px;
+
+  background-color: var(--background);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+
+  cursor: pointer;
+}
+
+.backButton:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--surface-light);
+}
+
+.selectedDate {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid #29404f;
+}
+
+.selectedDate p {
+  margin: 0 0 4px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #00aaff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.selectedDate h2 {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 100;
+
+  text-transform: capitalize;
+}
+
+@media (max-width: 600px) {
+  .landingPage {
+    gap: 16px;
+    padding: 30px 12px 12px;
+  }
+
+  .resourcesLandingWrapper {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .welcome {
+    padding: 20px;
+  }
+
+  .welcome h1 {
+    font-size: 26px;
+  }
+
+  .bookingAction {
+    margin-top: 12px;
+    padding: 14px;
+  }
+
+  .selectedDate {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+
+  .selectedDate h2 {
+    font-size: 20px;
+  }
+
+  .backButton {
+    margin-bottom: 16px;
+  }
+}

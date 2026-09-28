@@ -1,0 +1,167 @@
+.userListWrapper {
+    width: 100%;
+    max-width: 1000px;
+    padding: 24px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading {
+    flex-direction: column;
+}
+
+.headerAndButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.eyebrow {
+    margin: 0 0 6px;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+}
+
+.placeholder {
+    min-height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+}
+
+.placeholder p {
+    margin: 0;
+
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+button {
+    margin: 0 0 6px;
+
+    background-color: transparent;
+    color: var(--primary);
+    border: none;
+
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+button:hover {
+    color: var(--primary-hover);
+}
+
+button:active {
+    color: var(--primary);
+}
+
+/* Rubrikraden: E-post | Roll */
+.info {
+    width: 100%;
+    margin-bottom: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    font-weight: 100;
+    font-size: 15px;
+
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Behållare för alla användare */
+.userList {
+    width: 100%;
+}
+
+/* En användare */
+.userRow {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 1rem 0;
+
+    color: var(--text);
+    font-size: 14px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Samma bredder används i både rubriken och användarraderna */
+.email {
+    width: 70%;
+}
+
+.role {
+    width: 30%;
+}
+
+@media (max-width: 600px) {
+    .userListWrapper {
+        padding: 16px;
+    }
+
+    .headerAndButton {
+        margin-bottom: 8px;
+    }
+
+    .headerAndButton button {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .info {
+        margin-bottom: 6px;
+        font-size: 11px;
+    }
+
+    .userRow {
+        padding: 12px 0;
+        font-size: 12px;
+    }
+
+    .email {
+        width: 75%;
+        overflow-wrap: anywhere;
+    }
+
+    .role {
+        width: 25%;
+        text-align: right;
+    }
+
+    .placeholder {
+        min-height: 80px;
+    }
+
+    .placeholder p {
+        font-size: 12px;
+    }
+}

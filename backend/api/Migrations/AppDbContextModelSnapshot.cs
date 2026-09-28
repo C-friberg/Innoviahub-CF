@@ -201,6 +201,128 @@ namespace api.Migrations
                     b.HasKey("ResourceId");
 
                     b.ToTable("Resources");
+
+                    b.HasData(
+                        new
+                        {
+                            ResourceId = 1,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 2,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 3,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 4,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 5,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 6,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 7,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 8,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 9,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 10,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 11,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 12,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 13,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 14,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 15,
+                            ResourceType = 1
+                        },
+                        new
+                        {
+                            ResourceId = 20,
+                            ResourceType = 2
+                        },
+                        new
+                        {
+                            ResourceId = 21,
+                            ResourceType = 2
+                        },
+                        new
+                        {
+                            ResourceId = 22,
+                            ResourceType = 2
+                        },
+                        new
+                        {
+                            ResourceId = 23,
+                            ResourceType = 2
+                        },
+                        new
+                        {
+                            ResourceId = 30,
+                            ResourceType = 4
+                        },
+                        new
+                        {
+                            ResourceId = 40,
+                            ResourceType = 3
+                        },
+                        new
+                        {
+                            ResourceId = 41,
+                            ResourceType = 3
+                        },
+                        new
+                        {
+                            ResourceId = 42,
+                            ResourceType = 3
+                        },
+                        new
+                        {
+                            ResourceId = 43,
+                            ResourceType = 3
+                        });
                 });
 
             modelBuilder.Entity("api.Models.Sensor", b =>

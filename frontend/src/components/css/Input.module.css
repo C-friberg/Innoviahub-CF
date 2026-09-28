@@ -1,0 +1,46 @@
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.inputLabel {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.inputWrapper {
+    display: flex;
+    position: relative;
+}
+
+.inputField {
+    width: 100%;
+    padding: 14px 16px;
+
+    color: var(--text);
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 4px;
+
+    outline: none;
+}
+
+.inputField:focus {
+    border-color: var(--primary);
+}
+
+.passwordButton {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--primary);
+
+    cursor: pointer;
+}

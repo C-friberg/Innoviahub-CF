@@ -10,14 +10,10 @@ namespace api.Dtos.BookingDtos
     public class CreateBookingDto
     {
         [Required]
-        public int BookingId { get; set; }
+        public int ResourceId { get; set; }
         [Required]
         public DateTime StartTime { get; set; }
         [Required]
         public DateTime EndTime { get; set; }
-        [Required]
-        public int ResourceId { get; set; }
-        [Required]
-        public string UserId { get; set; } = string.Empty;
     }
 }

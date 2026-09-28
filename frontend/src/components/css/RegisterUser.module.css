@@ -1,0 +1,165 @@
+.registerPage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.registerCard {
+    width: 100%;
+    max-width: 460px;
+    padding: 38px;
+
+    background: linear-gradient(
+        145deg,
+        #101c29,
+        #0b1520
+    );
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.heading {
+    margin-bottom: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading h1 {
+    margin: 4px 0 10px;
+    font-size: 32px;
+    color: var(--text);
+}
+
+.heading p {
+    margin: 0;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.eyebrow {
+    color: var(--primary) !important;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.registerButton {
+    width: 100%;
+    padding: 15px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #1fa7ff;
+    border-radius: 4px;
+
+    background: linear-gradient(
+        90deg,
+        #117be8,
+        #268cff
+    );
+
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+    transition: filter 0.15s ease;
+}
+
+.registerButton:hover {
+    filter: brightness(1.12);
+}
+
+.registerButton:active {
+    filter: brightness(0.9);
+}
+
+.backButton {
+    width: 100%;
+    padding: 13px;
+
+    background: transparent;
+
+    border: 1px solid var(--border);
+    border-radius: 4px;
+
+    color: var(--text-secondary);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.backButton:hover {
+    color: var(--text);
+    border-color: var(--primary);
+    background-color: rgba(21, 151, 255, 0.05);
+}
+
+.backButton:active {
+    color: var(--text);
+    background-color: rgba(19, 133, 226, 0.05);
+}
+
+.errorMessage {
+    margin: 0;
+    color: #ff6b6b;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .registerPage {
+        padding: 12px;
+    }
+
+    .registerCard {
+        padding: 22px 18px;
+    }
+
+    .heading {
+        margin-bottom: 22px;
+    }
+
+    .heading h1 {
+        margin-bottom: 8px;
+        font-size: 26px;
+    }
+
+    .heading p {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .registerForm {
+        gap: 16px;
+    }
+
+    .registerButton {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .backButton {
+        padding: 11px;
+        font-size: 12px;
+    }
+}

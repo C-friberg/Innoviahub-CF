@@ -19,11 +19,17 @@ namespace api.Repositories
         }
         public async Task<IEnumerable<Booking>> GetAllAsync()
         {
-            return await _context.Bookings.ToListAsync();
+            return await _context.Bookings
+                .Include(b => b.Resource)
+                .Include(b => b.User)
+                .ToListAsync();
         }
         public async Task<Booking?> GetByIdAsync(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
+            return await _context.Bookings
+                .Include(b => b.Resource)
+                .Include(b => b.User)
+                .FirstOrDefaultAsync(b => b.BookingId == id);
         }
 
         public async Task<bool> IsResourceAvailableAsync(DateTime startTime, DateTime endTime, int resourceId)
@@ -37,11 +43,11 @@ namespace api.Repositories
         {
             var alreadyBooked = await IsResourceAvailableAsync(booking.StartTime, booking.EndTime, booking.ResourceId);
 
-            if (alreadyBooked)
+            if (!alreadyBooked)
             {
                 return null;
             }
-            await _context.Bookings.AddAsync(booking); /* dto */
+            await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
 
             return booking;
@@ -53,14 +59,24 @@ namespace api.Repositories
         }
 
         public async Task<IEnumerable<Booking>> GetByUserIdAsync(string id)
-        {
-            return await _context.Bookings.Where(b => b.UserId == id).ToListAsync();
+{
+    return await _context.Bookings
+        .Include(b => b.Resource)
+        .Include(b => b.User)
+        .Where(b => b.UserId == id)
+        .ToListAsync();
+}
 
-        }
-
-        public async Task<Booking?> DeleteBookingAsync(Booking booking)
+        public async Task<Booking?> DeleteBookingByIdAsync(int id)
         {
-            throw new NotImplementedException(); /* Up for grabs */
+            var booking = await GetByIdAsync(id);
+            if (booking == null)
+            {
+                return null;
+            }
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync();
+            return booking;
         }
     }
 }

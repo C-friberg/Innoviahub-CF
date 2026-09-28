@@ -9,24 +9,12 @@ namespace api.Interfaces
 {
     public interface IBookingRepository
     {
-        /* Samma visa som resurs, vad är relevant */
         Task<IEnumerable<Booking>> GetAllAsync();
         Task<Booking?> GetByIdAsync(int id);
         Task<IEnumerable<Booking>> GetByUserIdAsync(string id);
         Task<IEnumerable<Booking>> GetByResourceIdAsync(int resourceId);
         Task<bool> IsResourceAvailableAsync(DateTime startTime, DateTime endTime, int resourceId);
         Task<Booking?> CreateBookingAsync(Booking booking);
-        Task<Booking?> DeleteBookingAsync(Booking booking); 
-
-
-        // Task<Id|null>(resourceType, time)
-        //om det finns en ledig resurs för tiden, returnera första bästa id för denna, annars returna null(?).
-
-        // [HttpPut] , id -> 
-        // Vi måste skapa slots
-        // Fetch alla typer -> Fetch alla skrivbord -> O -> 
-
-        //Fetch -> O ->  
-        /* Istället för att hantera bokningslogiken med en bool? */
+        Task<Booking?> DeleteBookingByIdAsync(int id); 
     }
 }

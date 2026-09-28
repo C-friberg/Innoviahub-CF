@@ -1,0 +1,26 @@
+:root {
+  --background: #07111c;
+
+  --surface: #101c29;
+  --surface-light: #162433;
+
+  --primary: #1597ff;
+  --primary-hover: #38a8ff;
+
+  --text: #f4f7fb;
+  --text-secondary: #9eabbc;
+
+  --border: #263747;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+}
