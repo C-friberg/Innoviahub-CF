@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
+using api.Dtos.AIDtos;
+using System.Net.Http.Json;
 
 namespace api.Services
 {
@@ -17,17 +16,29 @@ namespace api.Services
         {
             var requestBody = new
             {
-               model = "gpt-4.1",
-               input = question 
-            }; 
+                model = "gpt-4.1",
+                input = question
+            };
 
-            var response = await _httpClient.PostAsJsonAsync("responses", requestBody); 
+            var response = await _httpClient.PostAsJsonAsync("responses", requestBody);
 
-            response.EnsureSuccessStatusCode(); 
+            response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync(); 
+            var json = await response.Content.ReadAsStringAsync();
 
-            return json; 
+            var result = JsonSerializer.Deserialize<OpenAIResponseDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            if (result == null || result.Output.Count == 0)
+            {
+                throw new Exception("OpenAI returned no output.");
+            }
+
+            if (result.Output[0].Content.Count == 0)
+            {
+                throw new Exception("OpenAi returned no content.");
+            }
+
+            return result.Output[0].Content[0].Text;
         }
     }
 }
