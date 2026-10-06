@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using api.Dtos.ResourceDtos;
 using api.Interfaces;
 using api.Enums;
+using api.Models;
 
 namespace api.Services
 {
@@ -58,6 +59,21 @@ namespace api.Services
                 TotalResources = resources.Count,
                 AvailableResources = availableResources
             };
+        }
+
+        public async Task<Resource?> GetFirstAvailableAsync(ResourceType resourceType, DateTime startTime, DateTime endTime)
+        {
+            var resources = await _resourceRepository.GetByTypeAsync(resourceType); 
+
+            foreach(var resource in resources)
+            {
+                var isAvailable = await _bookingRepository.IsResourceAvailableAsync(startTime, endTime, resource.ResourceId); 
+                if (isAvailable)
+                {
+                    return resource; 
+                }
+            }
+            return null; 
         }
     }
 }

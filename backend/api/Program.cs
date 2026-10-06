@@ -77,6 +77,7 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AvailabilityService>();
 builder.Services.AddScoped<TimeService>();
 builder.Services.AddScoped<IAIService, AIService>();
+builder.Services.AddScoped<AIBookingService>();
 
 builder.Services
     .AddIdentity<User, IdentityRole>()
