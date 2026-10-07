@@ -1,0 +1,309 @@
+.aiBookingWrapper {
+    width: 100%;
+    max-width: 1100px;
+    padding: 24px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+.icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+
+    color: var(--primary);
+    font-size: 20px;
+}
+
+.headerText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.titleRow h2 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.beta {
+    padding: 3px 8px;
+
+    background-color: rgba(30, 136, 229, 0.15);
+
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+
+    color: var(--primary);
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.description {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.inputWrapper {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 4px;
+
+    background-color: transparent;
+
+    border: 1px solid var(--primary);
+    border-radius: 6px;
+}
+
+.input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 10px 12px;
+
+    background-color: transparent;
+
+    border: none;
+    outline: none;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.input::placeholder {
+    color: var(--text-secondary);
+}
+
+.sendButton {
+    flex-shrink: 0;
+
+    margin: 0;
+    padding: 10px 18px;
+
+    background-color: var(--primary);
+
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: 0.15s ease;
+}
+
+.sendButton:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--text);
+}
+
+.sendButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.example {
+    margin: 10px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+.suggestion {
+    margin-top: 20px;
+    padding: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.suggestion h3 {
+    margin: 0 0 14px;
+
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.details {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    margin-bottom: 14px;
+}
+
+.detail {
+    padding: 12px;
+
+    background-color: rgba(255, 255, 255, 0.02);
+
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+.value {
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.confirmButton {
+    width: 100%;
+
+    margin: 0;
+    padding: 10px 14px;
+
+    background-color: transparent;
+
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: 0.15s ease;
+}
+
+.confirmButton:hover {
+    background-color: var(--primary);
+    color: var(--text);
+}
+
+.confirmButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.error {
+    margin-top: 12px;
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    border-radius: 4px;
+
+    color: #ff6b6b;
+
+    font-size: 13px;
+}
+
+.success {
+    margin-top: 12px;
+    padding: 10px 12px;
+
+    border: 1px solid rgba(80, 200, 120, 0.4);
+    border-radius: 4px;
+
+    color: #62d98b;
+
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .aiBookingWrapper {
+        padding: 16px;
+    }
+
+    .header {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 18px;
+    }
+
+    .titleRow h2 {
+        font-size: 18px;
+    }
+
+    .description {
+        font-size: 13px;
+    }
+
+    .inputWrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input {
+        padding: 10px;
+    }
+
+    .sendButton {
+        width: 100%;
+    }
+
+    .details {
+        grid-template-columns: 1fr;
+    }
+}

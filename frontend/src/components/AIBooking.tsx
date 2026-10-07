@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./css/AIBooking.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL; 
 
@@ -19,6 +20,67 @@ export default function AIBooking(){
     const [suggestion, setSuggestion] = useState<AIBookingResponse | null>(null); 
     const [loading, setLoading] = useState(false); 
     const [error, setError] = useState(""); 
+    const [bookingLoading, setBookingLoading] = useState(false);
+    const [bookingMessage, setBookingMessage] = useState(""); 
+
+    async function handleConfirmBooking() {
+        if(!suggestion) {
+            return; 
+        }
+
+        const token = localStorage.getItem("token"); 
+
+        if(!token) {
+            setError("Du måste vara inloggad för att kunna boka.")
+            return; 
+        }
+
+        setBookingLoading(true); 
+        setError(""); 
+        setBookingMessage(""); 
+
+        try {
+            const bookingData = {
+                resourceId: suggestion.resourceId,
+                startTime: `${suggestion.intent.date}T${suggestion.intent.startTime}`,
+                endTime: `${suggestion.intent.date}T${suggestion.intent.endTime}`,
+            }; 
+
+            const response = await fetch(`${API_URL}/api/Bookings`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }, 
+                body: JSON.stringify(bookingData),
+            }); 
+            if(response.status === 401) {
+                throw new Error("Du är inte inloggad eller din inloggning har gått ut"); 
+            }
+
+            if (response.status === 409) {
+                throw new Error("Resursen hann bli bokad. Försök igen");
+            }
+
+            if(!response.ok) {
+                const message = await response.text(); 
+                throw new Error(message || "Bokning kunde inte genomföras")
+            }
+
+            setBookingMessage("Bokningen är genomförd"); 
+            setSuggestion(null); 
+            setQuestion(""); 
+        } catch(error) {
+            if (error instanceof Error) {
+                setError(error.message); 
+            } else {
+                setError("Okänt fel uppstod.")
+            }
+        } finally {
+            setBookingLoading(false); 
+        }
+
+    }
 
     async function handleAskAI() {
         if(!question.trim()) {
@@ -65,29 +127,129 @@ export default function AIBooking(){
         }
     }
 
-    return( 
-        <section>
-            <h2>AI Bokning</h2>
+    return (
+        <section className={styles.aiBookingWrapper}>
 
-            <p>
-                Beskriv vad du vill boka, till exempel: "Jag vill boka ett rum imorgon mellan 9-12."
-            </p>
+            <div className={styles.header}>
+                <div className={styles.icon}>
+                    ✦
+                </div>
 
-            <input type="text" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Vad vill du boka? "/>
-            <button type="button" onClick={handleAskAI} disabled={loading}> {loading ? "Letar..." : "Hitta bokning"} </button>
-            {error && <p>{error}</p>}
+                <div className={styles.headerText}>
+                    <div className={styles.titleRow}>
+                        <h2>AI-assistent</h2>
 
-            {suggestion && (
-                <div> 
-                    <h3>Bokningsförslag</h3>
+                        <span className={styles.beta}>
+                            BETA
+                        </span>
+                    </div>
 
-                    <p>Resurs: {suggestion.intent.resourceType}</p>
-                    <p>Datum: {suggestion.intent.date}</p>
-                    <p>Tid: {suggestion.intent.startTime} - {suggestion.intent.endTime}</p>
+                    <p className={styles.description}>
+                        Beskriv vad du vill boka så hjälper
+                        AI-assistenten dig.
+                    </p>
+                </div>
+            </div>
 
-                    <p>ResursID: {suggestion.resourceId}</p>
+
+            <div className={styles.inputWrapper}>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={question}
+                    onChange={(event) =>
+                        setQuestion(event.target.value)
+                    }
+                    onKeyDown={(event) => {
+                        if (event.key === "Enter" && !loading) {
+                            handleAskAI();
+                        }
+                    }}
+                    placeholder="T.ex. boka ett VR-headset imorgon mellan 09 och 12..."
+                />
+
+                <button
+                    className={styles.sendButton}
+                    type="button"
+                    onClick={handleAskAI}
+                    disabled={loading}
+                >
+                    {loading ? "Letar..." : "Skicka"}
+                </button>
+            </div>
+
+            {error && (
+                <div className={styles.error}>
+                    {error}
                 </div>
             )}
+
+
+            {suggestion && (
+                <div className={styles.suggestion}>
+
+                    <h3>Bokningsförslag</h3>
+
+                    <div className={styles.details}>
+
+                        <div className={styles.detail}>
+                            <span className={styles.label}>
+                                Resurs
+                            </span>
+
+                            <span className={styles.value}>
+                                {suggestion.intent.resourceType}
+                            </span>
+                        </div>
+
+
+                        <div className={styles.detail}>
+                            <span className={styles.label}>
+                                Datum
+                            </span>
+
+                            <span className={styles.value}>
+                                {suggestion.intent.date}
+                            </span>
+                        </div>
+
+
+                        <div className={styles.detail}>
+                            <span className={styles.label}>
+                                Tid
+                            </span>
+
+                            <span className={styles.value}>
+                                {suggestion.intent.startTime.slice(0, 5)}
+                                {" – "}
+                                {suggestion.intent.endTime.slice(0, 5)}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        className={styles.confirmButton}
+                        type="button"
+                        onClick={handleConfirmBooking}
+                        disabled={bookingLoading}
+                    >
+                        {bookingLoading
+                            ? "Bokar..."
+                            : "Bekräfta bokning"}
+                    </button>
+
+                </div>
+            )}
+
+
+            {bookingMessage && (
+                <div className={styles.success}>
+                    {bookingMessage}
+                </div>
+            )}
+
         </section>
-    )
+    );
 }
