@@ -6,6 +6,7 @@ import Calendar from "../components/Calendar";
 import TimeSlots from "../components/TimeSlots";
 import Resources from "../components/Resources";
 import Bookings from "../components/Bookings";
+import AIBooking from "../components/AIBooking";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -182,6 +183,7 @@ export default function LandingPage() {
         </div>
 
         <div className={styles.bookingCalendarWrapper}>
+          <AIBooking />
           {!selectedDate ? (
             <Calendar
               selectedDate={selectedDate}
