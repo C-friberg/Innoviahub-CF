@@ -55,6 +55,7 @@ public class AIBookingServiceTests
     [Fact]
     public async Task FindAvailableResourceAsync_WhenResourceIsAvailable_ReturnsResource()
     {
+        //Arrange
         var intent = new BookingIntentDto
         {
             ResourceType = "VRHeadset",
