@@ -1,3 +1,7 @@
 dev_README.md
 
 .env
+**/bin/
+**/obj/
+.env
+**/.env

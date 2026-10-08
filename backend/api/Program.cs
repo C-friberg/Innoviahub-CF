@@ -74,7 +74,7 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<AvailabilityService>();
+builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 builder.Services.AddScoped<TimeService>();
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<AIBookingService>();

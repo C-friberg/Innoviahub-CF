@@ -10,8 +10,10 @@ using api.Models;
 
 namespace api.Services
 {
-    public class AvailabilityService
+    public class AvailabilityService : IAvailabilityService
     {
+
+
         private readonly IBookingRepository _bookingRepository;
         private readonly IResourceRepository _resourceRepository;
 
@@ -63,17 +65,17 @@ namespace api.Services
 
         public async Task<Resource?> GetFirstAvailableAsync(ResourceType resourceType, DateTime startTime, DateTime endTime)
         {
-            var resources = await _resourceRepository.GetByTypeAsync(resourceType); 
+            var resources = await _resourceRepository.GetByTypeAsync(resourceType);
 
-            foreach(var resource in resources)
+            foreach (var resource in resources)
             {
-                var isAvailable = await _bookingRepository.IsResourceAvailableAsync(startTime, endTime, resource.ResourceId); 
+                var isAvailable = await _bookingRepository.IsResourceAvailableAsync(startTime, endTime, resource.ResourceId);
                 if (isAvailable)
                 {
-                    return resource; 
+                    return resource;
                 }
             }
-            return null; 
+            return null;
         }
     }
 }

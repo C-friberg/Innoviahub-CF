@@ -10,8 +10,8 @@ namespace api.Services
 {
     public class AIBookingService
     {
-        private readonly AvailabilityService _availabilityService;
-        public AIBookingService(AvailabilityService availabilityService)
+        private readonly IAvailabilityService _availabilityService;
+        public AIBookingService(IAvailabilityService availabilityService)
         {
             _availabilityService = availabilityService;
         }
