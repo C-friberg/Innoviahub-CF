@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using api.Services;
 using api.Hubs;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,16 @@ builder.Services.AddControllers()
             new System.Text.Json.Serialization.JsonStringEnumConverter()
         );
     });
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+?? throw new InvalidOperationException("OPENAI_API_KEY IS MISSING!");
+
+builder.Services.AddHttpClient("openai", client =>
+{
+    client.BaseAddress = new Uri("https://api.openai.com/v1/");
+
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", apiKey);
+});
 
 builder.Services.AddSignalR();
 
@@ -63,8 +74,10 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<AvailabilityService>();
+builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 builder.Services.AddScoped<TimeService>();
+builder.Services.AddScoped<IAIService, AIService>();
+builder.Services.AddScoped<AIBookingService>();
 
 builder.Services
     .AddIdentity<User, IdentityRole>()
