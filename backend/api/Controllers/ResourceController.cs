@@ -20,8 +20,8 @@ namespace api.Controllers
     {
         private readonly IResourceRepository _resourceRepository;
         private readonly IBookingRepository _bookingRepository;
-        private readonly AvailabilityService _availabilityService;
-        public ResourceController(IResourceRepository resourceRepository, IBookingRepository bookingRepository, AvailabilityService availabilityService)
+        private readonly IAvailabilityService _availabilityService;
+        public ResourceController(IResourceRepository resourceRepository, IBookingRepository bookingRepository, IAvailabilityService availabilityService)
         {
             _resourceRepository = resourceRepository;
             _bookingRepository = bookingRepository;
