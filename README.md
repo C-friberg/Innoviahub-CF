@@ -1,177 +1,118 @@
 # Innovia Hub
 
-Innovia Hub är en webbapplikation för ett coworking- och forskningscenter där användare kan boka resurser och se deras tillgänglighet.
+Innovia Hub är ett bokningssystem för resurser som skrivbord, mötesrum, VR-headset och AI-server. Projektet har en frontend och ett ASP.NET Core Web API med PostgreSQL. Systemet innehåller även en AI-assistent som tolkar bokningsönskemål med OpenAI och föreslår tillgängliga resurser.
 
-Projektet består av:
+Applikationen körs med **Docker Compose**, vilket innebär att frontend, backend och databas kan startas tillsammans.
 
-- **Backend:** ASP.NET Core Web API (.NET 8)
-- **Frontend:** React + TypeScript + Vite
-- **Databas:** PostgreSQL
-- **Realtidskommunikation:** SignalR
-- **Autentisering:** ASP.NET Core Identity + JWT
-- **Databasåtkomst:** Entity Framework Core
-- **Docker:** PostgreSQL körs lokalt i Docker
+## 1. Klona projektet
 
-## Kom igång
+Öppna en terminal och kör:
 
-### 1. Klona `dev`
-
-Klona projektets `dev`-branch:
-
-```powershell
-git clone -b dev https://github.com/Innovia-3/Innovia-3.git
-cd Innovia-3
+```bash
+git clone https://github.com/C-friberg/Innoviahub-CF.git
+cd innoviahub-cf
+git switch main
 ```
 
-### 2. Starta PostgreSQL
+## 2. Konfigurera miljövariabler
 
-Se till att Docker Desktop är startat.
+I projektets rot finns filen `.env.example`. Skapa en kopia av den och döp kopian till `.env`.
 
-Kör sedan från projektets rotmapp:
+**Windows (PowerShell):**
 
 ```powershell
-docker compose up -d
+Copy-Item .env.example .env
 ```
 
-Kontrollera att PostgreSQL kör:
+**macOS/Linux:**
 
-```powershell
+```bash
+cp .env.example .env
+```
+
+Öppna `.env` och fyll i värdena:
+
+```dotenv
+JWT_KEY=replace-with-jwt-key
+POSTGRES_DB=innoviahub
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=replace-with-postgres-password
+OPENAI_API_KEY=replace-with-valid-OPENAI_API_KEY
+```
+
+| Variabel            | Beskrivning                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `JWT_KEY`           | Hemlig nyckel för signering av JWT-token. Använd en lång, slumpmässig nyckel. |
+| `POSTGRES_DB`       | Namnet på PostgreSQL-databasen.                                               |
+| `POSTGRES_USER`     | Användarnamn för PostgreSQL.                                                  |
+| `POSTGRES_PASSWORD` | Lösenord för PostgreSQL.                                                      |
+| `OPENAI_API_KEY`    | Giltig OpenAI API-nyckel för AI-assistenten.                                  |
+
+## 3. Starta projektet med Docker
+
+Kontrollera att Docker Desktop körs. Öppna sedan en terminal i projektets rot, där `docker-compose.yml` ligger, och kör:
+
+```bash
+docker compose up --build -d
+```
+
+Docker bygger de images som behövs och startar tjänsterna i bakgrunden. Första starten kan ta några minuter.
+
+Kontrollera att containrarna körs:
+
+```bash
 docker compose ps
 ```
 
-Containern `innoviahub-postgres` ska ha status `Up`.
+## 4. Öppna applikationen
 
-### 3. Konfigurera JWT
+Med den tidigare använda portkonfigurationen nås tjänsterna här:
 
-Gå till backend:
+| Tjänst      | Adress                |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:3000 |
+| Backend API | http://localhost:5197 |
 
-```powershell
-cd backend\api
+**Obs:** Kontrollera portarna under `ports:` i `docker-compose.yml` om adresserna ovan inte fungerar. Exponerade portar kan ha ändrats.
+
+För att använda AI-assistenten behöver backend ha tillgång till en giltig `OPENAI_API_KEY`.
+
+## 5. Stoppa eller starta om projektet
+
+**Stoppa och ta bort containrarna:**
+
+```bash
+docker compose down
 ```
 
-Projektet använder .NET User Secrets för JWT-nyckeln:
+**Starta igen:**
 
-```powershell
-dotnet user-secrets set "Jwt:Key" "8xV!qP2mZ#7kL9wR4nT6yH1cF5sJ3dG0aB@eU7iK2pN9vX4rM6zQ1hW8fC5tY3jL"
-```
-
-JWT-nyckeln för projektet tillhandahålls separat.
-
-### 4. Uppdatera databasen
-
-På en ny databas behöver EF Core-migrationerna köras:
-
-```powershell
-dotnet ef database update
-```
-
-Detta skapar databastabellerna och lägger in projektets seedade data.
-
-### 5. Starta backend
-
-Från `backend/api`:
-
-```powershell
-dotnet run
-```
-
-Backend körs på:
-
-```text
-http://localhost:5197
-```
-
-Låt terminalen vara igång.
-
-### 6. Starta frontend
-
-Öppna en ny terminal och gå till frontend:
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend körs på:
-
-```text
-http://localhost:5173
-```
-
-Öppna adressen i webbläsaren.
-
-## Starta projektet efter första installationen
-
-När databasen redan är konfigurerad behöver migrationerna och `npm install` normalt inte köras igen.
-
-Starta PostgreSQL från projektets rot:
-
-```powershell
+```bash
 docker compose up -d
 ```
 
-Starta backend:
+**Bygg om efter kodändringar:**
 
-```powershell
-cd backend\api
-dotnet run
+```bash
+docker compose up --build -d
 ```
 
-Starta frontend i en separat terminal:
+**Varning:** Kör inte `docker compose down -v` om du vill behålla databasens data. Flaggan `-v` tar även bort Compose-volymer.
 
-```powershell
-cd frontend
-npm run dev
+## 6. Uppdatera projektet
+
+Om nya ändringar har lagts till på `main`:
+
+```bash
+git switch main
+git pull origin main
+docker compose up --build -d
 ```
 
-## Kort om systemet
+## 7. Enhetstester (valfritt)
 
-Innovia Hub hanterar fyra typer av bokningsbara resurser:
+Projektet innehåller enhetstester för AI-bokningslogiken med **xUnit** och **Moq**. Om du har .NET SDK installerat kan testerna köras från testprojektets mapp med:
 
-| Resurs     | Antal |
-| ---------- | ----: |
-| Skrivbord  |    15 |
-| Mötesrum   |     4 |
-| VR-headset |     4 |
-| AI-server  |     1 |
-
-Tillgänglighet beräknas utifrån befintliga bokningar och valt tidsintervall.
-
-SignalR används för att uppdatera bokningsinformation i realtid. När en bokning skapas eller tas bort skickar backend eventet `BookingsChanged` till anslutna klienter.
-
-Användare autentiseras med ASP.NET Core Identity och JWT. Systemet har rollerna `User` och `Admin`.
-
-## Vanliga problem
-
-Om backend ger:
-
-```text
-relation "AspNetRoles" does not exist
-```
-
-har migrationerna inte körts. Kör:
-
-```powershell
-cd backend\api
-dotnet ef database update
-```
-
-Om backend inte får kontakt med PostgreSQL, kontrollera Docker:
-
-```powershell
-docker compose ps
-```
-
-och starta databasen vid behov:
-
-```powershell
-docker compose up -d
-```
-
-Om frontend saknar dependencies:
-
-```powershell
-cd frontend
-npm install
+```bash
+dotnet test
 ```
