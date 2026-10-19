@@ -7,6 +7,7 @@ import TimeSlots from "../components/TimeSlots";
 import Resources from "../components/Resources";
 import Bookings from "../components/Bookings";
 import AIBooking from "../components/AIBooking";
+import DeviceOverview from "../components/DeviceOverview";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -169,6 +170,7 @@ export default function LandingPage() {
       <Navbar />
 
       <main className={styles.landingPage}>
+        <DeviceOverview />
         <div className={styles.resourcesLandingWrapper}>
           <Resources
             selectedResourceType={selectedResourceType}

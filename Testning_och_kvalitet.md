@@ -152,3 +152,33 @@ Användaren måste själv bekräfta bokningen innan en bokning skickas till vår
 
 
 
+
+
+## Egen kod: IoT-integration och kvalitet
+
+### Struktur och ansvar
+
+DeviceController exponerar GET /api/devices och använder IDeviceService. DeviceService hämtar DeviceRegistry-listan via HttpClient och DeviceDto beskriver svaret. Vi använder ingen lokal kopia av enheterna i databasen. Konfigurationen innehåller API-adress och tenant-ID, så integrationen kan anpassas utan att ändra uppslagskoden.
+
+Frontendens DeviceOverview följer befintlig struktur med en komponent och CSS-modul. Den hämtar enhetslistan från vårt API och har en separat SignalR-anslutning till Realtime.Hub. BookingHub fortsätter hantera bokningshändelser. Mätningar kopplas till enhetslistan via GUID och senaste värde sparas per enhet och mättyp. Äldre tidsstämplar ersätter inte nyare värden.
+
+### Genomförd manuell integrationskontroll
+
+Den 15 oktober 2026 anropades http://localhost:5197/api/devices via Invoke-RestMethod. Svaret innehöll alla 13 registrerade enheter, dev-101 till dev-113. Detta verifierar kedjan eget Docker-API → DeviceRegistry → enhetslista. Det verifierar inte realtidsvisningen.
+
+### Kontroller inför demo som återstår
+
+| Kontroll | Förväntat resultat |
+|---|---|
+| Öppna portalen på http://localhost:3000 | Alla 13 enheter visas med serienummer och modell. |
+| Starta simulatorn | Alla 13 kort får rätt mätvärden utan sidomladdning. dev-101 visar två mättypers värden. |
+| Jämför GUID med Ingest debug-endpoint | Mätningar finns för varje enhet separat. |
+| Stoppa och starta Realtime.Hub | Anslutningsstatus ändras och klienten återansluter samt går med i tenantgruppen igen. |
+| Stoppa DeviceRegistry och ladda om portalen | Ett hämtningsfel visas i stället för en missvisande tom lista. |
+| Kontrollera bokningsflödet | Bokningsfunktioner och BookingHub fungerar efter tillägget. |
+
+Byggkontroller dokumenteras i samband med implementationen. Kontrollerna ovan är en testplan och ska inte räknas som godkända förrän de har genomförts i webbläsaren.
+
+### Begränsningar och vidareutveckling
+
+Översikten visar inkommande värden sedan sidan öppnades; den hämtar ingen historik. Status och mättid visas för att användaren ska kunna upptäcka frånkoppling och gamla värden. Sensorerna är ännu inte kopplade till enskilda bokningsresurser. Hub-adress och tenant är angivna för den lokala demonstrationen. Extern driftsättning kräver adresser som webbläsaren kan nå, HTTPS och motsvarande CORS-inställningar. Behörighetskontroll av sensordata behöver utformas inför annan användning än den lokala demonstrationen.

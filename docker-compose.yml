@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -30,6 +30,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
+      DeviceRegistry__BaseUrl: http://host.docker.internal:5101/
+      DeviceRegistry__TenantId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       Jwt__Key: ${JWT_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY} 
