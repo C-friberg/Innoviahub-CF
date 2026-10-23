@@ -9,6 +9,7 @@ namespace api.Models
     public class Sensor
     {
         public int SensorId { get; set; }
+        public Guid? DeviceRegistryDeviceId { get; set; }
         public string Name { get; set; } = string.Empty;
         public SensorType SensorType { get; set; }
         /* FK */

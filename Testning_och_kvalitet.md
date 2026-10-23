@@ -152,3 +152,76 @@ Användaren måste själv bekräfta bokningen innan en bokning skickas till vår
 
 
 
+
+
+## Egen kod: IoT-integration och kvalitet
+
+### Struktur och ansvar
+
+DeviceController exponerar GET /api/devices och använder IDeviceService. DeviceService hämtar DeviceRegistry-listan via HttpClient och DeviceDto beskriver svaret. Vi använder ingen lokal kopia av enheterna i databasen. Konfigurationen innehåller API-adress och tenant-ID, så integrationen kan anpassas utan att ändra uppslagskoden.
+
+Frontendens DeviceOverview följer befintlig struktur med en komponent och CSS-modul. Den hämtar enhetslistan från vårt API och har en separat SignalR-anslutning till Realtime.Hub. BookingHub fortsätter hantera bokningshändelser. Mätningar kopplas till enhetslistan via GUID och senaste värde sparas per enhet och mättyp. Äldre tidsstämplar ersätter inte nyare värden.
+
+### Genomförd manuell integrationskontroll
+
+Den 15 oktober 2026 anropades http://localhost:5197/api/devices via Invoke-RestMethod. Svaret innehöll alla 13 registrerade enheter, dev-101 till dev-113. Detta verifierar kedjan eget Docker-API → DeviceRegistry → enhetslista. Det verifierar inte realtidsvisningen.
+
+### Kontroller inför demo som återstår
+
+| Kontroll | Förväntat resultat |
+|---|---|
+| Öppna portalen på http://localhost:3000 | Alla 13 enheter visas med serienummer och modell. |
+| Starta simulatorn | Alla 13 kort får rätt mätvärden utan sidomladdning. dev-101 visar två mättypers värden. |
+| Jämför GUID med Ingest debug-endpoint | Mätningar finns för varje enhet separat. |
+| Stoppa och starta Realtime.Hub | Anslutningsstatus ändras och klienten återansluter samt går med i tenantgruppen igen. |
+| Stoppa DeviceRegistry och ladda om portalen | Ett hämtningsfel visas i stället för en missvisande tom lista. |
+| Kontrollera bokningsflödet | Bokningsfunktioner och BookingHub fungerar efter tillägget. |
+
+Byggkontroller dokumenteras i samband med implementationen. Kontrollerna ovan är en testplan och ska inte räknas som godkända förrän de har genomförts i webbläsaren.
+
+### Begränsningar och vidareutveckling
+
+Översikten visar inkommande värden sedan sidan öppnades; den hämtar ingen historik. Status och mättid visas för att användaren ska kunna upptäcka frånkoppling och gamla värden. Sensorerna är nu kopplade till bokningsresurser enligt avsnittet nedan. Hub-adress och tenant är angivna för den lokala demonstrationen. Extern driftsättning kräver adresser som webbläsaren kan nå, HTTPS och motsvarande CORS-inställningar. Behörighetskontroll av sensordata behöver utformas inför annan användning än den lokala demonstrationen.
+
+
+## Koppling av IoT-enheter till egna resurser
+
+### Implementation
+
+Sensor har nu ett nullable GUID-fält, DeviceRegistryDeviceId. ResourceId är fortfarande den lokala främmande nyckeln till Resource. Det externa GUID:t har ett unikt index, så en DeviceRegistry-enhet kan inte kopplas till flera lokala sensorposter. Befintliga sensorposter kan fortsatt ha null i GUID-fältet. Tabellen heter fortsatt Sensor trots att AppDbContext nu exponerar DbSet Sensors.
+
+SensorType.Humidity lades sist i enumen så att tidigare numeriska värden behålls. dev-101 får en lokal sensorpost, kategoriserad som temperatur, men kan fortfarande visa både temperatur och CO₂. Kategorin begränsar inte vilka mättypers värden som tas emot.
+
+Data/IoTSensorSeed.cs innehåller fördelningen för vår befintliga demo. Enheternas faktiska GUID:er hämtades genom serienumren från DeviceRegistry när seedningen skapades, och resurserna kontrollerades via vårt API. Migrationen LinkSensorsToResources lägger till fältet, indexet och 13 seedposter. Negativa SensorId används för att inte kollidera med vanliga automatiskt genererade positiva ID:n. Seedningen är knuten till dessa demo-GUID:er; ett annat register kräver anpassad seedning/migration. Den gör inga externa HTTP-anrop vid API-start.
+
+| Resurs | Serienummer |
+|---|---|
+| Mötesrum 20 | dev-102, dev-106, dev-110 |
+| Mötesrum 21 | dev-103, dev-107, dev-111 |
+| Mötesrum 22 | dev-104, dev-108, dev-112 |
+| Mötesrum 23 | dev-105, dev-113 |
+| AIServer 30 | dev-101, dev-109 |
+
+DeviceService kombinerar DeviceRegistry-listan med lokala kopplingar via en AsNoTracking-projektion. DeviceDto returnerar resourceId och resourceType. Ej kopplade enheter behåller null och visas i frontend under Ej kopplade. DeviceOverview grupperar de befintliga enhetskorten per resurs; mätvärden matchas fortfarande på enhets-GUID och mättyp.
+
+Data/AppDbContextFactory.cs gör att EF-verktygen kan skapa ett DbContext utan att köra hela API-starten och kräva OpenAI-nyckel. Den skapar inte någon ny databasanslutning förrän ett verktyg behöver använda databasen. En genererad migration behöver fortfarande granskas innan applicering.
+
+### Verifiering 19 oktober 2026
+
+- Befintliga sju backendtester godkändes. Dessa testar bokningslogik, inte den nya kopplingsfunktionen.
+- Backend byggdes och EF-migrationen genererades; migrationen innehåller tillägg av GUID, 13 seedposter och unikt index. Inga befintliga resurser eller bokningar tas bort av Up-metoden.
+- Frontendens TypeScript, produktionsbygge och riktade ESLint-kontroll godkändes.
+- Docker-API och frontend byggdes om och startades. API:t applicerade migrationen vid uppstart.
+- Ett manuellt integrationstest kontrollerade samtliga 13 serienummer mot exakt förväntat resourceId. Alla kopplingar stämde.
+- Den befintliga resursendpointen returnerade fortfarande 24 resurser och frontend svarade med HTTP 200.
+
+Visuell kontroll av gruppernas layout och realtidsvärden efter denna ändring återstår i webbläsaren. Även null-fallet för en ny, ej kopplad enhet och avvisning av dubbla GUID behöver testas separat; de ska inte räknas som verifierade bara för att koden hanterar dem.
+
+
+### Sensoröversikt på adminsidan
+
+Sensoröversikten har flyttats från LandingPage till en egen vy på AdminPage, med knapparna Administration och Sensoröversikt. Standardvyn är Administration. Komponentnamnet i AdminPage har även rättats till AdminPage. Sensorernas kort har mindre padding, mellanrum och text, och vyn använder adminsidan befintliga maxbredd på 1100 px.
+
+DeviceOverview monteras endast när sensorvyn är vald. Dess befintliga cleanup stänger realtidsanslutningen när vyn lämnas. Vid återgång hämtas listan på nytt och korten väntar på nya mätningar. Förflyttningen till adminsidan ändrar inte API:ts eller hubbens behörighetsregler.
+
+Frontendens TypeScript, produktionsbygge och riktade lintkontroll godkändes. Kontrollera i webbläsaren att vyn kan växlas, att registrera/tillbaka fortfarande fungerar och att realtidsvärden visas efter återgång till sensorvyn.

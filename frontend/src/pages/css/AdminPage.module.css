@@ -183,3 +183,34 @@
     font-size: 12px;
   }
 }
+
+
+.viewTabs {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.viewTab {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.viewTab[aria-pressed="true"] {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: rgba(21, 151, 255, 0.08);
+}
+
+.viewTab:hover { border-color: var(--primary); }
+.viewTab:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.sensorView { width: 100%; max-width: 1100px; margin: 0 auto; }

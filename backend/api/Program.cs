@@ -78,6 +78,14 @@ builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 builder.Services.AddScoped<TimeService>();
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<AIBookingService>();
+builder.Services.AddHttpClient<IDeviceService, DeviceService>(client =>
+{
+    var baseUrl = builder.Configuration["DeviceRegistry:BaseUrl"] ?? throw new InvalidOperationException
+    ("DeviceRegistry:BaseUrl saknas.");
+
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 builder.Services
     .AddIdentity<User, IdentityRole>()
