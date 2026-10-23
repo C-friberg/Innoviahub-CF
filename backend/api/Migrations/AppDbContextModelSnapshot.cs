@@ -333,6 +333,9 @@ namespace api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SensorId"));
 
+                    b.Property<Guid?>("DeviceRegistryDeviceId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -345,9 +348,118 @@ namespace api.Migrations
 
                     b.HasKey("SensorId");
 
+                    b.HasIndex("DeviceRegistryDeviceId")
+                        .IsUnique();
+
                     b.HasIndex("ResourceId");
 
-                    b.ToTable("Sensor");
+                    b.ToTable("Sensor", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            SensorId = -101,
+                            DeviceRegistryDeviceId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                            Name = "dev-101",
+                            ResourceId = 30,
+                            SensorType = 0
+                        },
+                        new
+                        {
+                            SensorId = -102,
+                            DeviceRegistryDeviceId = new Guid("059de92e-8bdb-4586-99c3-a55a45a330cb"),
+                            Name = "dev-102",
+                            ResourceId = 20,
+                            SensorType = 3
+                        },
+                        new
+                        {
+                            SensorId = -103,
+                            DeviceRegistryDeviceId = new Guid("2c7050b0-d442-4eae-baae-f6554a85e4ce"),
+                            Name = "dev-103",
+                            ResourceId = 21,
+                            SensorType = 3
+                        },
+                        new
+                        {
+                            SensorId = -104,
+                            DeviceRegistryDeviceId = new Guid("002d3586-0e2c-4a3b-ac9a-9412cfd69840"),
+                            Name = "dev-104",
+                            ResourceId = 22,
+                            SensorType = 3
+                        },
+                        new
+                        {
+                            SensorId = -105,
+                            DeviceRegistryDeviceId = new Guid("b2be7090-1b32-41b7-bd6f-5dfda293bb3b"),
+                            Name = "dev-105",
+                            ResourceId = 23,
+                            SensorType = 3
+                        },
+                        new
+                        {
+                            SensorId = -106,
+                            DeviceRegistryDeviceId = new Guid("ddfd3e26-aeed-40f6-a3c4-511736b8a4b1"),
+                            Name = "dev-106",
+                            ResourceId = 20,
+                            SensorType = 0
+                        },
+                        new
+                        {
+                            SensorId = -107,
+                            DeviceRegistryDeviceId = new Guid("67a224c8-9835-4aa0-8cd4-1d9260479fc6"),
+                            Name = "dev-107",
+                            ResourceId = 21,
+                            SensorType = 0
+                        },
+                        new
+                        {
+                            SensorId = -108,
+                            DeviceRegistryDeviceId = new Guid("f115f39f-6f6a-427c-acbf-2fba8ec1282a"),
+                            Name = "dev-108",
+                            ResourceId = 22,
+                            SensorType = 0
+                        },
+                        new
+                        {
+                            SensorId = -109,
+                            DeviceRegistryDeviceId = new Guid("faad6f65-2036-45c0-a6a8-05c016575297"),
+                            Name = "dev-109",
+                            ResourceId = 30,
+                            SensorType = 4
+                        },
+                        new
+                        {
+                            SensorId = -110,
+                            DeviceRegistryDeviceId = new Guid("f5debc98-4bbf-4cdd-9473-689a6172ce8e"),
+                            Name = "dev-110",
+                            ResourceId = 20,
+                            SensorType = 5
+                        },
+                        new
+                        {
+                            SensorId = -111,
+                            DeviceRegistryDeviceId = new Guid("30b49b57-50ab-4c76-9e64-15b9cb5ed532"),
+                            Name = "dev-111",
+                            ResourceId = 21,
+                            SensorType = 5
+                        },
+                        new
+                        {
+                            SensorId = -112,
+                            DeviceRegistryDeviceId = new Guid("f02aeac7-4b78-4a13-8154-f6c007cd514a"),
+                            Name = "dev-112",
+                            ResourceId = 22,
+                            SensorType = 5
+                        },
+                        new
+                        {
+                            SensorId = -113,
+                            DeviceRegistryDeviceId = new Guid("9e1f582c-91ef-4512-b859-d07387e07df1"),
+                            Name = "dev-113",
+                            ResourceId = 23,
+                            SensorType = 5
+                        });
                 });
 
             modelBuilder.Entity("api.Models.User", b =>

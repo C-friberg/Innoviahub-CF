@@ -17,10 +17,16 @@ namespace api.Data
         }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Resource> Resources { get; set; }
+        public DbSet<Sensor> Sensors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             base.OnModelCreating(modelbuilder);
+            modelbuilder.Entity<Sensor>().ToTable("Sensor");
+            modelbuilder.Entity<Sensor>()
+                .HasIndex(sensor => sensor.DeviceRegistryDeviceId)
+                .IsUnique();
+            IoTSensorSeed.Configure(modelbuilder);
             modelbuilder.Entity<Resource>().HasData(
                 new Resource { ResourceId = 1, ResourceType = Enums.ResourceType.Skrivbord },
                 new Resource { ResourceId = 2, ResourceType = Enums.ResourceType.Skrivbord },

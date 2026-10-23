@@ -6,7 +6,8 @@ namespace api.Enums
         MotionSensor,
         Security,
         AirQuality,
-        PowerConsumption
+        PowerConsumption,
+        Humidity
     }
 }
 

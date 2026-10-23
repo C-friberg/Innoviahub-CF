@@ -11,6 +11,8 @@ type Device = {
   serial: string;
   model: string;
   status: string;
+  resourceId: number | null;
+  resourceType: string | null;
 };
 
 type Measurement = {
@@ -129,6 +131,20 @@ export default function DeviceOverview() {
     };
   }, []);
 
+  const groups = devices.reduce<Record<string, { label: string; devices: Device[] }>>(
+    (current, device) => {
+      const key = device.resourceId === null ? "unlinked" : String(device.resourceId);
+      const resourceName = device.resourceType === "AIServer" ? "AI-server" : device.resourceType;
+      const label = device.resourceId === null
+        ? "Ej kopplade"
+        : `${resourceName ?? "Resurs"} ${device.resourceId}`;
+      current[key] ??= { label, devices: [] };
+      current[key].devices.push(device);
+      return current;
+    },
+    {},
+  );
+
   return (
     <section className={styles.overview} aria-labelledby="device-heading">
       <h2 id="device-heading">Sensoröversikt</h2>
@@ -136,30 +152,36 @@ export default function DeviceOverview() {
       {loading && <p>Hämtar enheter...</p>}
       {error && <p role="alert">{error}</p>}
       {!loading && !error && devices.length === 0 && <p>Inga enheter registrerade.</p>}
-      <div className={styles.cards}>
-        {devices.map(device => (
-          <article key={device.id} className={styles.card}>
-            <h3>{device.serial}</h3>
-            <p>{device.model} · {device.status}</p>
-            {!measurements[device.id] && <p>Väntar på mätdata...</p>}
-            {Object.values(measurements[device.id] ?? {}).map(measurement => {
-              const metric = metricLabels[measurement.type];
-              return (
-                <div key={measurement.type} className={styles.measurement}>
-                  <span>{metric?.label ?? measurement.type}</span>
-                  <strong>
-                    {measurement.value.toLocaleString("sv-SE", { maximumFractionDigits: 1 })}
-                    {" "}{metric?.unit ?? ""}
-                  </strong>
-                  <small>
-                    Mätt {new Date(measurement.time).toLocaleString("sv-SE")}
-                  </small>
-                </div>
-              );
-            })}
-          </article>
-        ))}
-      </div>
+      {Object.entries(groups).map(([key, group]) => (
+        <section key={key} className={styles.resourceGroup} aria-label={group.label}>
+          <h3>{group.label}</h3>
+          <p>{group.devices.length} sensorenheter</p>
+          <div className={styles.cards}>
+            {group.devices.map(device => (
+              <article key={device.id} className={styles.card}>
+                <h3>{device.serial}</h3>
+                <p>{device.model} · {device.status}</p>
+                {!measurements[device.id] && <p>Väntar på mätdata...</p>}
+                {Object.values(measurements[device.id] ?? {}).map(measurement => {
+                  const metric = metricLabels[measurement.type];
+                  return (
+                    <div key={measurement.type} className={styles.measurement}>
+                      <span>{metric?.label ?? measurement.type}</span>
+                      <strong>
+                        {measurement.value.toLocaleString("sv-SE", { maximumFractionDigits: 1 })}
+                        {" "}{metric?.unit ?? ""}
+                      </strong>
+                      <small>
+                        Mätt {new Date(measurement.time).toLocaleString("sv-SE")}
+                      </small>
+                    </div>
+                  );
+                })}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
     </section>
   );
 }
