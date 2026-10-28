@@ -14,6 +14,7 @@ using System.Net.Http.Headers;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -153,6 +154,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Frontend");
+
+// Catch errors inside the CORS pipeline so error responses keep CORS headers.
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

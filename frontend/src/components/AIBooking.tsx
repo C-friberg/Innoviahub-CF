@@ -102,17 +102,19 @@ export default function AIBooking(){
                     question: question,
                 }),
             });  
-            /* if (!response.ok) {
-                throw new Error("Kunde inte hitta ledig resurs"); 
-            } */
-           if (!response.ok) {
-                const message = await response.text();
+            if (!response.ok) {
+                const contentType = response.headers.get("content-type") ?? "";
+                let message = "AI-tjänsten är inte tillgänglig just nu. Försök igen senare.";
 
-                console.error("AI endpoint error:", response.status, message);
+                if (contentType.includes("json")) {
+                    const problem: { detail?: string } = await response.json();
+                    message = problem.detail || message;
+                } else if (response.status === 404) {
+                    message = "Ingen ledig resurs hittades för ditt önskemål.";
+                }
 
-                throw new Error(
-                    `AI-anrop misslyckades (${response.status}): ${message}`);
-}
+                throw new Error(message);
+            }
 
             const data: AIBookingResponse = await response.json(); 
             setSuggestion(data); 

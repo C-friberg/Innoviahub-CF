@@ -225,3 +225,18 @@ Sensoröversikten har flyttats från LandingPage till en egen vy på AdminPage, 
 DeviceOverview monteras endast när sensorvyn är vald. Dess befintliga cleanup stänger realtidsanslutningen när vyn lämnas. Vid återgång hämtas listan på nytt och korten väntar på nya mätningar. Förflyttningen till adminsidan ändrar inte API:ts eller hubbens behörighetsregler.
 
 Frontendens TypeScript, produktionsbygge och riktade lintkontroll godkändes. Kontrollera i webbläsaren att vyn kan växlas, att registrera/tillbaka fortfarande fungerar och att realtidsvärden visas efter återgång till sensorvyn.
+
+
+## Felhantering för AI-anrop i molnversionen
+
+AIController fångar nu fel från AIService innan de lämnar endpointen. Autentiseringsfel hos AI-leverantören returneras som 502, begränsning som 503, timeout som 504 och nätverksfel eller ogiltigt JSON-svar som 502. Feltexten skiljer dessa problem från användarens inloggning i vår applikation. Leverantörens råa svar eller nycklar skickas inte till frontend.
+
+Program.cs registrerar ProblemDetails och placerar UseExceptionHandler efter UseCors. Därmed hanteras även andra serverundantag inne i CORS-pipelinen i stället för att ett ohanterat undantag döljs som Failed to fetch i webbläsaren. Den befintliga listan över tillåtna ursprung behålls; CORS öppnas inte för alla.
+
+AIBooking.tsx läser detail från JSON-felsvaret och visar meddelandet för användaren. Tekniska svarskroppar loggas inte längre i frontendens AI-felhantering.
+
+Sju nya tester i backend/api.Tests/Controllers/AIControllerTests.cs kontrollerar 401, 403, 429, 500, nätverksfel, timeout och ogiltigt JSON. Testerna säkerställer även att interna feltexter inte exponeras och att tillgänglighetssökningen inte körs när AI-tolkningen misslyckas. Totalt 14 backendtester godkändes. Frontendens produktionsbygge och riktade lintkontroll godkändes.
+
+Ändringen löser felresponsen, inte en nekad API-nyckel. AI-funktionen kräver fortfarande giltiga inloggningsuppgifter för AI-leverantören.
+
+Lokalt HTTP-test den 28 oktober 2026: OPTIONS med Railway-frontends origin gav 204 med korrekt Access-Control-Allow-Origin. POST med nekad leverantörsnyckel gav 502 med samma CORS-header och ett application/problem+json-svar med läsbar detail.
