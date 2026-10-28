@@ -134,6 +134,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddRateLimiter(AIRateLimit.Configure);
 
 var app = builder.Build();
 
@@ -162,6 +163,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapControllers();
 app.MapHub<BookingHub>("/Hubs/Booking");

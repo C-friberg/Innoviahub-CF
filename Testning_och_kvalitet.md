@@ -240,3 +240,11 @@ Sju nya tester i backend/api.Tests/Controllers/AIControllerTests.cs kontrollerar
 Ändringen löser felresponsen, inte en nekad API-nyckel. AI-funktionen kräver fortfarande giltiga inloggningsuppgifter för AI-leverantören.
 
 Lokalt HTTP-test den 28 oktober 2026: OPTIONS med Railway-frontends origin gav 204 med korrekt Access-Control-Allow-Origin. POST med nekad leverantörsnyckel gav 502 med samma CORS-header och ett application/problem+json-svar med läsbar detail.
+
+## Inloggning och anropsgräns för AI – 28 oktober 2026
+
+AIController kräver nu JWT-autentisering och använder policyn i Services/AIRateLimit.cs. Program.cs registrerar en fast tidsperiod på en minut med fem tillåtna anrop per användar-ID, utan kö. Rate limiter körs efter autentisering och auktorisering. Ett avvisat anrop får 429, Retry-After och ett läsbart ProblemDetails-svar. Begränsningen lagras i minnet per API-instans och är inget hårt kostnadstak; även misslyckade AI-försök räknas.
+
+AIBooking.tsx skickar Bearer-token och visar tydliga meddelanden för saknad eller utgången inloggning samt för många anrop.
+
+Två HTTP-tester i Controllers/AIAccessTests.cs kör en isolerad server med signerade testtoken och mockad AI-tjänst. De verifierar 401 utan giltig token, att AI-tjänsten då inte anropas, fem tillåtna försök följt av 429, separat räknare för en annan användare samt CORS på felsvar. Inga riktiga AI-anrop görs av testerna. Samtliga 16 backendtester, frontendens produktionsbygge och riktad ESLint-kontroll godkändes.

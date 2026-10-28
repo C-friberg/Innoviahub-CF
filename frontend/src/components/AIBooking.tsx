@@ -88,6 +88,13 @@ export default function AIBooking(){
             return; 
         }
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setError("Logga in för att använda AI-assistenten.");
+            setSuggestion(null);
+            return;
+        }
+
         setLoading(true); 
         setError(""); 
         setSuggestion(null); 
@@ -96,12 +103,21 @@ export default function AIBooking(){
             const response = await fetch(`${API_URL}/api/ai/chat`, {
                 method: "POST", 
                 headers: {
-                    "Content-Type": "application/json", 
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     question: question,
                 }),
             });  
+            if (response.status === 401) {
+                setSuggestion(null);
+                throw new Error("Din inloggning har gått ut. Logga in igen för att använda AI-assistenten.");
+            }
+            if (response.status === 429) {
+                throw new Error("Du har nått gränsen på fem AI-anrop per minut. Vänta en stund och försök igen.");
+            }
+
             if (!response.ok) {
                 const contentType = response.headers.get("content-type") ?? "";
                 let message = "AI-tjänsten är inte tillgänglig just nu. Försök igen senare.";

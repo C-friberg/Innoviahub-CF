@@ -235,3 +235,7 @@ Projektet innehåller enhetstester för AI-bokningslogiken med **xUnit** och **M
 ```bash
 dotnet test
 ```
+
+## AI-assistentens åtkomst
+
+AI-assistenten kräver inloggning. Frontend skickar användarens JWT till POST /api/ai/chat. Varje användare kan göra högst fem AI-anrop per minut; även misslyckade försök räknas. Gränsen gäller per API-instans och återställs vid omstart, och är därför inget kostnadstak hos AI-leverantören. En giltig OPENAI_API_KEY krävs fortfarande på servern.

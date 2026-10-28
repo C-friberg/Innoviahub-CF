@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 using System.Text.Json;
 using api.Dtos.AIDtos;
@@ -6,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
+    [Authorize]
+    [EnableRateLimiting(AIRateLimit.PolicyName)]
     [ApiController]
     [Route("api/[controller]")]
     public class AIController : ControllerBase
