@@ -1,5 +1,60 @@
 # Innovia Hub
 
+## Individuell leverans – G-krav
+
+**Publicerad applikation:** [Innovia Hub på Railway](https://innovia-3-frontend-production.up.railway.app/)
+
+**Backend:** [Innovia Hub API på Railway](https://innovia-3-production.up.railway.app/) (API-basadress, ingen startsida krävs).
+
+Innovia Hub hjälper användare att hitta och boka kontorets resurser. Användaren kan välja resurstyp och tid själv eller beskriva sitt önskemål för AI-assistenten. AI:n föreslår en tillgänglig resurs; användaren bekräftar innan bokningen skapas. Administratören kan hantera användare och bokningar samt se sensoröversikten när IoT-systemet är tillgängligt.
+
+Utförliga teststeg, koppling mellan krav och kod samt kvarvarande arbete finns i [G_krav.md](G_krav.md). Instruktioner för lokal start finns längre ned i denna README.
+
+### Tekniker och drift
+
+| Område | Teknik och syfte |
+|---|---|
+| Frontend | React, TypeScript och Vite; komponenter och CSS Modules för gränssnittet |
+| Backend | C# och ASP.NET Core 8 Web API; controllers, services och repositories |
+| Databas | PostgreSQL, Entity Framework Core och migrationer |
+| Inloggning | ASP.NET Core Identity och JWT; administratörsroller begränsar administration |
+| Realtid för bokningar | SignalR i det egna API:t, `/Hubs/Booking` |
+| AI | OpenAI Responses API med modellen `gpt-4.1`; tolkning av bokningsönskemål |
+| IoT | Separat DeviceRegistry API och Realtime.Hub; MQTT används i IoT-projektet för simulerade mätvärden |
+| Drift | Railway för frontend, API och PostgreSQL; Docker Compose för lokal körning |
+| Kvalitet | xUnit, Moq, HTTP-tester, TypeScript-bygge och ESLint |
+
+### Funktioner jag har vidareutvecklat i min individuella version
+
+- AI-bokningsflöde: tolka text, kontrollera ledig resurs, visa förslag och bekräfta bokning.
+- AI-felhantering med läsbara meddelanden för leverantörsfel och timeout, utan att exponera råa felsvar eller nycklar.
+- Inloggningskrav för AI och högst fem anrop per minut per användare och API-instans.
+- Integration mot DeviceRegistry genom eget interface, service, controller och enhets-DTO.
+- Koppling mellan 13 registrerade IoT-enheter och egna resurser genom sensormodell, seeddata och EF-migration.
+- Sensoröversikt på adminsidan, grupperad efter resurs, med SignalR-uppdaterade mätvärden vid lokal IoT-körning.
+- Driftsättning av den individuella versionen från detta repo till Railway samt dokumentation och tester.
+
+Bokningssystemet, dess resurser, användarhantering och SignalR för bokningar är grunden från grupparbetet som den individuella versionen bygger vidare på. Ändringarna i det separata IoT-projektet dokumenteras i dess [Implementation.md](https://github.com/C-friberg/Innovia-iot/blob/main/Implementation.md).
+
+### Testkonto och snabbtest av molnversionen
+
+Testkonto: **Admin@innoviahub.se**, roll **Admin**. Lösenordet lämnas separat tillsammans med inlämningen. Kontot är angivet av projektägaren; provlogga in inför inlämning. Använd ett särskilt demokonto, inte ett personligt konto. Konton registreras av administratör; det finns ingen öppen självregistrering.
+
+1. Öppna Railway-länken ovan och logga in med det bifogade testkontot.
+2. Välj en resurstyp, ett framtida datum och en ledig start- och sluttid. Genomför en bokning och kontrollera att den visas under Bokningar.
+3. Öppna samma resurs och datum i ett andra webbläsarfönster. Skapa eller ta bort din testbokning i första fönstret och kontrollera att tillgängligheten uppdateras i det andra utan manuell omladdning.
+4. Skriv exempelvis ”Jag vill boka ett mötesrum den [framtida datum] klockan 10 till 11” i AI-assistenten. Ersätt datumet med ett verkligt framtida datum. Kontrollera förslaget, bekräfta och kontrollera den skapade bokningen. Välj annan tid om alla resurser redan är upptagna.
+5. Ta bort dina testbokningar när testet är klart. Fullständig testmatris finns i [G_krav.md](G_krav.md).
+
+### IoT i molnversionen och kvarvarande arbete
+
+IoT-servern är inte driftsatt. Bokningar, AI och bokningarnas SignalR använder vårt eget driftsatta API och behöver inte IoT-servern. Sensorlistan och sensormätvärdena kräver däremot det separata IoT-systemet.
+
+Sensorvyn har felhantering för misslyckad hämtning och visar anslutningsstatus, men hubbadressen är fortfarande hårdkodad till `http://localhost:5103/hub/telemetry`. Den adressen pekar på besökarens dator och är inte en publik IoT-server. Ett samlat och tydligt offlinebesked, exempelvis ”Sensordata är inte tillgänglig just nu”, återstår att implementera och verifiera i molnversionen. Det nya kravet på hantering av offline-IoT ska därför ännu inte räknas som färdigverifierat.
+
+---
+
+
 Innovia Hub är ett bokningssystem för resurser som skrivbord, mötesrum, VR-headset och AI-server. Projektet har en frontend och ett ASP.NET Core Web API med PostgreSQL. Systemet innehåller även en AI-assistent som tolkar bokningsönskemål med OpenAI och föreslår tillgängliga resurser.
 
 Applikationen körs med **Docker Compose**, vilket innebär att frontend, backend och databas kan startas tillsammans.
